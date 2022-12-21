@@ -1,7 +1,7 @@
-using RPG.Combat;
 using UnityEngine;
 using RPG.Movement;
-using Vector3 = UnityEngine.Vector3;
+using RPG.Combat;
+
 
 namespace RPG.Control
 {
@@ -31,11 +31,11 @@ namespace RPG.Control
             for (int i = 0; i < hits.Length; i++)
             {
                 var target = hits[i].transform.GetComponent<CombatTarget>();
-                if (target == null) continue;
+                if (!_fighter.CanAttack(target)) continue;
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    _fighter.Attack(target);
+                    _fighter.SetAttackTarget(target);
                 }
                 
                 return true;

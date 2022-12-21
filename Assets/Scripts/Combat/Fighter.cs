@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using RPG.Movement;
 
@@ -10,7 +9,7 @@ namespace  RPG.Combat
         [SerializeField] private float attackSpeed = 1f;
         [SerializeField] private float weaponDamage = 5f;
 
-        private Transform _target;
+        private Health _target;
         private Mover _mover;
         private Animator _animator;
 
@@ -26,10 +25,10 @@ namespace  RPG.Combat
         private void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
-            
-            if (_target == null) return;
 
-            var isInAttackRange = Vector3.Distance(transform.position, _target.position) <= weaponRange;
+            if (_target == null || _target.IsDead) return;
+            
+            var isInAttackRange = Vector3.Distance(transform.position, _target.transform.position) <= weaponRange;
             
             if (isInAttackRange)
             {
@@ -38,24 +37,33 @@ namespace  RPG.Combat
             }
             else
             {
-                _mover.Move(_target.position);
+                _mover.Move(_target.transform.position);
             }
         }
 
-        public void Attack(CombatTarget combatTarget)
+        public bool CanAttack(CombatTarget combatTarget)
         {
-            _target = combatTarget.transform;
+            if (combatTarget == null) return false;
+            return !combatTarget.GetComponent<Health>().IsDead;
+        }
+
+        public void SetAttackTarget(CombatTarget combatTarget)
+        {
+            _target = combatTarget.GetComponent<Health>();
         }
 
         public void CancelAttack()
         {
+            _animator.SetTrigger("cancelAttack");
             _target = null;
         }
 
         private void AttackBehavior()
         {
+            transform.LookAt(_target.transform);
             if (timeSinceLastAttack > attackSpeed)
             {
+                _animator.ResetTrigger("cancelAttack");
                 _animator.SetTrigger("attack");
                 timeSinceLastAttack = 0f;
             }
@@ -64,7 +72,9 @@ namespace  RPG.Combat
         //Attack Animation Event
         private void Hit()
         {
-            _target.GetComponent<Health>().TakeDamage(weaponDamage);
+            if (_target == null) return;
+            
+            _target.TakeDamage(weaponDamage);
         }
 
     }
