@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -8,6 +9,8 @@ namespace RPG.Combat
 
         private float _currentHealth;
         private Animator _animator;
+
+        public event Action OnDeath; 
 
         public bool IsDead { get; private set; }
 
@@ -24,12 +27,11 @@ namespace RPG.Combat
             {
                 HandleDeath();
             }
-            
-            Debug.Log($"{gameObject.name} + {_currentHealth}");
         }
 
         private void HandleDeath()
         {
+            OnDeath?.Invoke();
             IsDead = true;
             _animator.SetTrigger("die");
         }

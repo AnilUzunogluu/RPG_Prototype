@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1771092634868944057}
   - component: {fileID: 5027742638513234133}
   - component: {fileID: 1529989514383660752}
+  - component: {fileID: 5796000783202139890}
   - component: {fileID: 6889285628904606423}
   m_Layer: 0
   m_Name: Enemy
@@ -92,7 +93,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.3
-  m_Speed: 5.66
+  m_Speed: 3
   m_Acceleration: 400
   avoidancePriority: 50
   m_AngularSpeed: 1000
@@ -149,8 +150,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponRange: 2
-  attackSpeed: 1.2
-  weaponDamage: 5
+  attackSpeed: 1
+  weaponDamage: 5.5
 --- !u!114 &5027742638513234133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,6 +177,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8e1c8ea1f752154f8f5ec2a70471c77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5796000783202139890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973158649922354226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 966e9d1eace8a644db3e881956c3658f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseDistance: 5
+  idleMovementSpeed: 3
+  aggroMovementSpeed: 4.5
 --- !u!136 &6889285628904606423
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -13,8 +13,7 @@ namespace  RPG.Combat
         private Mover _mover;
         private Animator _animator;
 
-        private float timeSinceLastAttack;
-
+        private float _timeSinceLastAttack = Mathf.Infinity;
 
         private void Start()
         {
@@ -24,30 +23,52 @@ namespace  RPG.Combat
 
         private void Update()
         {
-            timeSinceLastAttack += Time.deltaTime;
+            _timeSinceLastAttack += Time.deltaTime;
 
-            if (_target == null || _target.IsDead) return;
-            
+            if (HasAvailableTarget())
+            {
+                MoveAndAttack();
+            }
+        }
+
+        private bool HasAvailableTarget()
+        {
+            return _target != null && !_target.IsDead;
+        }
+        
+        private void MoveAndAttack()
+        {
             var isInAttackRange = Vector3.Distance(transform.position, _target.transform.position) <= weaponRange;
-            
+
             if (isInAttackRange)
             {
                 _mover.Stop();
-                AttackBehavior();
+                AttackTheTarget();
             }
             else
             {
                 _mover.Move(_target.transform.position);
             }
         }
-
-        public bool CanAttack(CombatTarget combatTarget)
+        
+        private void AttackTheTarget()
+        {
+            transform.LookAt(_target.transform);
+            if (_timeSinceLastAttack > attackSpeed)
+            {
+                _animator.ResetTrigger("cancelAttack");
+                _animator.SetTrigger("attack");
+                _timeSinceLastAttack = 0f;
+            }
+        }
+        
+        public bool CanAttack(GameObject combatTarget)
         {
             if (combatTarget == null) return false;
             return !combatTarget.GetComponent<Health>().IsDead;
         }
 
-        public void SetAttackTarget(CombatTarget combatTarget)
+        public void SetAttackTarget(GameObject combatTarget)
         {
             _target = combatTarget.GetComponent<Health>();
         }
@@ -57,18 +78,7 @@ namespace  RPG.Combat
             _animator.SetTrigger("cancelAttack");
             _target = null;
         }
-
-        private void AttackBehavior()
-        {
-            transform.LookAt(_target.transform);
-            if (timeSinceLastAttack > attackSpeed)
-            {
-                _animator.ResetTrigger("cancelAttack");
-                _animator.SetTrigger("attack");
-                timeSinceLastAttack = 0f;
-            }
-        }
-
+        
         //Attack Animation Event
         private void Hit()
         {
@@ -76,6 +86,5 @@ namespace  RPG.Combat
             
             _target.TakeDamage(weaponDamage);
         }
-
     }
 }

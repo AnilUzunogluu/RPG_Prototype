@@ -6,6 +6,5 @@ namespace RPG.Combat
     public class CombatTarget : MonoBehaviour
     {
         //placeholder script to check if something is a combat target.
-    
     }
 }

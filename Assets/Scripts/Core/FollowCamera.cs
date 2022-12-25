@@ -5,6 +5,7 @@ namespace RPG.Core
     public class FollowCamera : MonoBehaviour
     {
         [SerializeField] private Transform target;
+        [SerializeField] private float cameraRotationSpeed = 25;
 
         private void Update()
         {
@@ -18,15 +19,14 @@ namespace RPG.Core
 
         private void RotateCamera()
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKey(KeyCode.E))
             {
-                transform.RotateAround(target.position, Vector3.up, 90);
+                transform.RotateAround(target.position, Vector3.up, cameraRotationSpeed * Time.deltaTime);
             }
 
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKey(KeyCode.Q))
             {
-                transform.RotateAround(target.position, Vector3.up, -90);
-
+                transform.RotateAround(target.position, Vector3.up, -cameraRotationSpeed * Time.deltaTime);
             }
         }
     }
